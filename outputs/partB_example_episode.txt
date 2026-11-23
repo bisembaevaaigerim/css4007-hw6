@@ -1,0 +1,79 @@
+condition=slippery=False, policy=random batch_seed=11 episode_seed=11000
+outcome=hole steps=10 total_reward=0.0
+
+reset seed=11000 state=0
+
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+
+step 1: state=0 action=up -> state=0 reward=0
+  (Up)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+
+step 2: state=0 action=up -> state=0 reward=0
+  (Up)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+
+step 3: state=0 action=up -> state=0 reward=0
+  (Up)
+[41mS[0mFFF
+FHFH
+FFFH
+HFFG
+
+step 4: state=0 action=down -> state=4 reward=0
+  (Down)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+
+step 5: state=4 action=down -> state=8 reward=0
+  (Down)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+
+step 6: state=8 action=up -> state=4 reward=0
+  (Up)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+
+step 7: state=4 action=down -> state=8 reward=0
+  (Down)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+
+step 8: state=8 action=left -> state=8 reward=0
+  (Left)
+SFFF
+FHFH
+[41mF[0mFFH
+HFFG
+
+step 9: state=8 action=up -> state=4 reward=0
+  (Up)
+SFFF
+[41mF[0mHFH
+FFFH
+HFFG
+
+step 10: state=4 action=right -> state=5 reward=0
+  (Right)
+SFFF
+F[41mH[0mFH
+FFFH
+HFFG

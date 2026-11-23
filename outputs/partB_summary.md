@@ -1,0 +1,14 @@
+| Slippery? | Policy | Batch seed | Goals /50 | Holes /50 | Time limits /50 | Success % | Mean steps |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| No | random | 11 | 2 | 48 | 0 | 4.0 | 9.78 |
+| No | random | 22 | 0 | 50 | 0 | 0.0 | 6.9 |
+| No | random | 33 | 0 | 50 | 0 | 0.0 | 7.44 |
+| No | fixed | 11 | 50 | 0 | 0 | 100.0 | 6.0 |
+| No | fixed | 22 | 50 | 0 | 0 | 100.0 | 6.0 |
+| No | fixed | 33 | 50 | 0 | 0 | 100.0 | 6.0 |
+| Yes | random | 11 | 0 | 50 | 0 | 0.0 | 8.44 |
+| Yes | random | 22 | 1 | 49 | 0 | 2.0 | 7.76 |
+| Yes | random | 33 | 0 | 50 | 0 | 0.0 | 7.3 |
+| Yes | fixed | 11 | 1 | 49 | 0 | 2.0 | 5.22 |
+| Yes | fixed | 22 | 2 | 48 | 0 | 4.0 | 6.0 |
+| Yes | fixed | 33 | 1 | 49 | 0 | 2.0 | 5.14 |
