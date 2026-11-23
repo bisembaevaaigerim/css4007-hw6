@@ -1,0 +1,39 @@
+V1 for every nonterminal tile (code vs paper)
+
+|   -1.00|   -1.00|   10.00|     G=0|
+|   -1.00|       #|   -1.00|     H=0|
+|   -1.00|   -1.00|   -1.00|   -1.00|
+
+(1,1) tile .: code=-1.0000 paper=-1.0000 OK
+(1,2) tile M: code=-1.0000 paper=-1.0000 OK
+(1,3) tile .: code=10.0000 paper=10.0000 OK
+(2,1) tile .: code=-1.0000 paper=-1.0000 OK
+(2,3) tile I: code=-1.0000 paper=-1.0000 OK
+(3,1) tile S: code=-1.0000 paper=-1.0000 OK
+(3,2) tile .: code=-1.0000 paper=-1.0000 OK
+(3,3) tile .: code=-1.0000 paper=-1.0000 OK
+(3,4) tile .: code=-1.0000 paper=-1.0000 OK
+
+V2 at the requested positions (Q-values use V1)
+
+(1,2) tile M
+      up: code=-3.9000 paper=-3.9000 OK
+   right: code=8.0000 paper=8.0000 OK
+    down: code=-3.9000 paper=-3.9000 OK
+    left: code=-1.9000 paper=-1.9000 OK
+   V2 = max = code=8.0000 paper=8.0000 OK
+
+(1,3) tile .
+      up: code=8.0000 paper=8.0000 OK
+   right: code=10.0000 paper=10.0000 OK
+    down: code=-1.9000 paper=-1.9000 OK
+    left: code=-3.9000 paper=-3.9000 OK
+   V2 = max = code=10.0000 paper=10.0000 OK
+
+(2,3) tile I
+      up: code=5.2100 paper=5.2100 OK
+   right: code=-7.3900 paper=-7.3900 OK
+    down: code=-2.7100 paper=-2.7100 OK
+    left: code=-0.9100 paper=-0.9100 OK
+   V2 = max = code=5.2100 paper=5.2100 OK
+

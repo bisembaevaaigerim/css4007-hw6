@@ -1,0 +1,32 @@
+Map: paper
+.M.G
+.#IH
+S...
+
+Status: converged
+Iterations: 12
+Final max change: 2.165e-07
+
+Final values:
+|    4.2000|    8.0000|   10.0000|       G=0|
+|    2.7800|         #|    5.8242|       H=0|
+|    1.5358|    2.8176|    4.2418|    2.8176|
+
+Policy (tile letter + arrow):
+| .→ | M→ | .→ | G  |
+| .↑ | #  | I↑ | H  |
+| S→ | .→ | .↑ | .← |
+
+Tie-breaking: actions whose Q-values differ by less than 1e-09 are tied. All tied actions are listed; the chosen arrow is the first in the order up, right, down, left.
+  No ties found.
+
+Q-values with final values:
+  (1,1) .: up=  2.7800  right=  4.2000  down=  1.5020  left=  2.7800  best=right
+  (1,2) M: up=  4.2000  right=  8.0000  down=  4.2000  left=  2.7800  best=right
+  (1,3) .: up=  8.0000  right= 10.0000  down=  4.2418  left=  4.2000  best=right
+  (2,1) .: up=  2.7800  right=  1.5020  down=  0.3822  left=  1.5020  best=up
+  (2,3) I: up=  5.8242  right= -6.9182  down=  1.6782  left=  4.4752  best=up
+  (3,1) S: up=  1.5020  right=  1.5358  down=  0.3822  left=  0.3822  best=right
+  (3,2) .: up=  1.5358  right=  2.8176  down=  1.5358  left=  0.3822  best=right
+  (3,3) .: up=  4.2418  right=  1.5358  down=  2.8176  left=  1.5358  best=up
+  (3,4) .: up=-10.0000  right=  1.5358  down=  1.5358  left=  2.8176  best=left
