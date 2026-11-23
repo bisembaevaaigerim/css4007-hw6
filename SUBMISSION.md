@@ -125,24 +125,116 @@ The fixed policy is the same table in every episode. The random policy always ch
 
 ## Part C — Custom solver
 
+Run: `python partC/main.py` (only the Python standard library is used).
+
 ### Compare code with paper
 
-Show V1 and the requested V2 values. Explain discrepancies.
+Full comparison: [outputs/partC_paper_compare.txt](outputs/partC_paper_compare.txt)
+
+V1 from the code:
+
+```
+|   -1.00|   -1.00|   10.00|     G=0|
+|   -1.00|       #|   -1.00|     H=0|
+|   -1.00|   -1.00|   -1.00|   -1.00|
+```
+
+| Position | up | right | down | left | V2 (code) | V2 (paper) |
+| --- | --- | --- | --- | --- | --- | --- |
+| (1,2) Mud | -3.9 | **8.0** | -3.9 | -1.9 | 8.0 | 8.0 |
+| (1,3) | 8.0 | **10.0** | -1.9 | -3.9 | 10.0 | 10.0 |
+| (2,3) Ice | **5.21** | -7.39 | -2.71 | -0.91 | 5.21 | 5.21 |
+
+All V1 values and all twelve Q-values for V2 match my paper work exactly. There were no discrepancies, so no corrections were needed.
 
 ### Values, policies and convergence
 
-Link both value/policy maps. Record iteration counts, final value changes and tie-breaking rule.
+- Original map: [outputs/partC_paper_map.txt](outputs/partC_paper_map.txt)
+- Extended map: [outputs/partC_extended_map.txt](outputs/partC_extended_map.txt)
+
+| Map | Iterations | Final max change | Converged? |
+| --- | --- | --- | --- |
+| Original | 12 | 2.165e-07 | Yes |
+| Extended | 11 | 2.406e-07 | Yes |
+
+The safeguard of 10,000 iterations was never reached.
+
+**Original map** (`.M.G / .#IH / S...`):
+
+```
+Values                                      Policy
+|  4.2000|  8.0000| 10.0000|    G=0|        | .→ | M→ | .→ | G  |
+|  2.7800|       #|  5.8242|    H=0|        | .↑ | #  | I↑ | H  |
+|  1.5358|  2.8176|  4.2418| 2.8176|        | S→ | .→ | .↑ | .← |
+```
+
+**Extended map** (`.M.G / .#IH / SD.W`):
+
+```
+Values                                      Policy
+|  4.2000|  8.0000| 10.0000|    G=0|        | .→ | M→ | .→ | G  |
+|  2.7800|       #|  5.8242|    H=0|        | .↑ | #  | I↑ | H  |
+|  1.5020|  2.8176|  4.2418| 2.8176|        | S↑ | D→ | .↑ | W← |
+```
+
+**Tie-breaking rule:** two actions are tied if their Q-values differ by less than 1e-9. All tied actions are listed in the output files. The chosen arrow is the first tied action in the order up, right, down, left. In my results, no ties were found on either map, so the rule did not change any arrow.
+
+The policy was extracted by computing the Q-value of all four actions in every state using the final values, and choosing the largest.
 
 ### Simulation results
 
+Episodes: [outputs/partC_episodes.csv](outputs/partC_episodes.csv) (each row includes the path). Summary: [outputs/partC_summary.csv](outputs/partC_summary.csv)
+
 | Map | Batch seed | Goals /50 | Holes /50 | Time limits /50 | Mean steps | Mean discounted return |
 | --- | --- | --- | --- | --- | --- | --- |
+| original | 11 | 42 | 8 | 0 | 4.98 | 0.8913 |
+| original | 22 | 46 | 4 | 0 | 5.04 | 1.9148 |
+| original | 33 | 48 | 2 | 0 | 5.04 | 2.4921 |
+| extended | 11 | 50 | 0 | 0 | 5.0 | 1.502 |
+| extended | 22 | 50 | 0 | 0 | 5.0 | 1.502 |
+| extended | 33 | 50 | 0 | 0 | 5.0 | 1.502 |
+
+V(S) on the original map = 1.5358. V(S) on the extended map = 1.5020.
+
+Each episode starts at S, uses the computed policy, stops at G or H or after 100 steps, and uses seed `1000 × batch_seed + i`. The discounted return is `r0 + 0.9*r1 + 0.9^2*r2 + ...`.
 
 ### Explain your results
 
-Which values/actions changed with sand and water? Where did cost and risk matter? How do simulations relate to the computed values?
+**Which values and actions changed with sand and water?**
+
+Only one action changed: at S, the best action changed from **right** (original) to **up** (extended).
+
+- On the original map, the best path is S → (3,2) → (3,3) → ice → (1,3) → G.
+- On the extended map, (3,2) is sand (-2 instead of -1). Q(S, right) dropped from 1.5358 to 0.5358, which is exactly 1 lower because of the extra sand cost. Now the upper path S → (2,1) → (1,1) → Mud → (1,3) → G is better: Q(S, up) = 1.5020.
+- Because the best action at S changed, V(S) dropped from 1.5358 to 1.5020. Q(2,1, down), which goes into S, also changed (0.3822 → 0.3518).
+
+All other values stayed the same. The values of the sand and water tiles themselves (2.8176) are equal to the values of the floor tiles at the same places on the original map. This is because the reward is paid when the agent **enters** a tile. The cost of sand and water appears in the Q-values of moves **into** these tiles:
+- moving into sand from S: Q = 0.5358 instead of 1.5358 (1 lower);
+- moving into water from (3,3): Q = -2.4642 instead of 1.5358 (4 lower).
+
+The policy never moves into sand or water. If the agent starts on water, it leaves to the left.
+
+**Where did cost and risk matter?**
+
+- **Cost:** the upper path goes through mud (-3), but on the extended map it is still better than paying for sand. On the original map, the two paths are very close (1.5358 vs 1.5020), so a small extra cost of 1 was enough to change the choice.
+- **Risk (ice):** on the original map, the best path goes over ice. From ice, the policy chooses **up** (Q = 5.8242). This moves to (1,3) with probability 0.8, but falls into the hole with probability 0.1. The safe action **left** (into the wall) only gives 4.4752, because the agent stays on ice and does not make progress. Value iteration maximises the **expected** return, so it accepts the 10% risk because (1,3) is very valuable (8.0 one step from the goal). It never chooses **right** (Q = -6.9182, 80% hole).
+- On the extended map, the agent avoids the ice completely. The reason is the sand cost, not the ice risk, but as a result its path has no risk at all.
+
+**How do simulations relate to the computed values?**
+
+V(S) is the **expected** discounted return over an **infinite** horizon, computed exactly from the model. A simulation gives only a **finite** number of sample episodes, each cut at 100 steps. So the simulation **estimates** V(S); it is not identical to it.
+
+- **Extended map:** the path has no ice, so every episode is the same: 5 steps, return exactly 1.502 = V(S). Here the simulation and the value match exactly, because there is no randomness.
+- **Original map:** each episode either reaches the goal (return 3.122 in 5 steps, or 1.8098 if the agent slips once and stays on ice) or falls into the hole (return -10.0). The batch means were 0.89, 1.91 and 2.49. The mean of all 150 episodes is about 1.63, which is close to V(S) = 1.5358. One extra hole in a batch of 50 changes the mean by about 0.26, so the batches vary a lot.
+- In theory, the hole probability with this policy is 0.1 / (0.1 + 0.8) ≈ 11.1% (the agent can stay on ice and try again). We observed 14/150 = 9.3%, which is close.
+- The 100-step limit did not matter here: all episodes ended in 4–6 steps. In general, rewards after step 100 are multiplied by 0.9^100 ≈ 0.00003, so they are almost zero.
 
 ### Rule checks
 
-Show boundary/wall behavior, slip probabilities, floor rewards and terminal handling.
+Full output: [outputs/partC_rule_checks.txt](outputs/partC_rule_checks.txt) — **20/20 checks passed.**
 
+- **Boundary:** S (3,1) left and (1,1) up stay in place with reward -1.
+- **Wall:** Mud (1,2) down hits the wall and stays in mud with reward -3; (2,1) right stays with -1; the wall (2,2) is not a state (11 states total).
+- **Ice probabilities:** for all four actions on ice, the probabilities sum to 1 (0.8 + 0.1 + 0.1). Ice left: 0.8 stay (wall), 0.1 up, 0.1 down.
+- **Floor rewards:** entering mud gives -3, sand -2, water -5, goal +10, hole -10. Sand and water are deterministic.
+- **Terminal handling:** G and H have no transitions; V(G) = V(H) = 0 after value iteration; a simulation from (1,3) moving right stops at G after 1 step with total reward exactly +10.
